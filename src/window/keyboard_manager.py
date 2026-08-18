@@ -8,7 +8,7 @@ from ..fsm.timer_manager import TimerManager
 from ..fsm.walk_manager import WalkManager
 from ..resources import ResourceRegistry
 from ..settings import Preferences
-from ..states import AllowedEmoteStates, AllowedWalkStates, State
+from ..states import AllowedEmoteStates, AllowedWalkStates, State, Direction
 
 
 def resolve_emote_key() -> int | None:

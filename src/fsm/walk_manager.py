@@ -234,7 +234,9 @@ class WalkManager:
         """
         Returns True if either vertical or horizontal movement is occurring.
         """
-        if self.is_tracking_mouse or self.is_orbiting:
+        if self.is_orbiting:
+            return True
+        if self.is_tracking_mouse:
             return self.tracking_ver != 0 or self.tracking_hor != 0
         if self.is_random_walking:
             return True
