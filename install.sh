@@ -10,7 +10,7 @@ if [[ -z "${INCLUDES_GIT}" ]]; then
 fi
 
 echo "Cloning repo into ~/.config/linux-desktop-gremlin..."
-git clone $FLAG https://github.com/iluvgirlswithglasses/linux-desktop-gremlin ~/.config/linux-desktop-gremlin
+git clone $FLAG https://github.com/xGrahanx/Umas-linux ~/.config/linux-desktop-gremlin
 cd ~/.config/linux-desktop-gremlin
 
 

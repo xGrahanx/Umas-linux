@@ -27,7 +27,7 @@ https://github.com/user-attachments/assets/eeb75510-9725-4f3a-a259-0959ddc22603
 1. Run install script:
 
 ```sh
-curl -s https://raw.githubusercontent.com/iluvgirlswithglasses/linux-desktop-gremlin/refs/heads/main/install.sh | bash
+curl -s https://raw.githubusercontent.com/xGrahanx/Umas-linux/refs/heads/main/install.sh | bash
 ```
 
 2. Call the gremlins from your app launcher!
