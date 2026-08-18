@@ -86,11 +86,15 @@ class KeyboardManager:
                 self.state_manager.transition_to(State.WALK_IDLE)
             elif self.state_manager.current_state in AllowedWalkStates:
                 self.walk_manager.start_orbit()
+                initial_dir = self.walk_manager.get_direction()
+                if initial_dir == Direction.NONE:
+                    initial_dir = Direction.DOWN
+                    
                 target_state = State.RUN
-                if (target_state, self.walk_manager.get_direction()) not in ResourceRegistry.animations:
+                if (target_state, initial_dir) not in ResourceRegistry.animations:
                     target_state = State.WALK
                 self.walk_manager.is_running = (target_state == State.RUN)
-                self.state_manager.transition_to(target_state, self.walk_manager.get_direction())
+                self.state_manager.transition_to(target_state, initial_dir)
             return
             
         if event.key() == Qt.Key.Key_R:
@@ -99,11 +103,15 @@ class KeyboardManager:
                 self.state_manager.transition_to(State.WALK_IDLE)
             elif self.state_manager.current_state in AllowedWalkStates:
                 self.walk_manager.start_stealing_mouse()
+                initial_dir = self.walk_manager.get_direction()
+                if initial_dir == Direction.NONE:
+                    initial_dir = Direction.DOWN
+                    
                 target_state = State.RUN
-                if (target_state, self.walk_manager.get_direction()) not in ResourceRegistry.animations:
+                if (target_state, initial_dir) not in ResourceRegistry.animations:
                     target_state = State.WALK
                 self.walk_manager.is_running = (target_state == State.RUN)
-                self.state_manager.transition_to(target_state, self.walk_manager.get_direction())
+                self.state_manager.transition_to(target_state, initial_dir)
                 self.timer_manager.reset_emote_dur_timer(5000) # steal mouse for 5 seconds max
             return
 
