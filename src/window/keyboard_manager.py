@@ -80,6 +80,33 @@ class KeyboardManager:
                 self.timer_manager.reset_emote_dur_timer()
             return
 
+        if event.key() == Qt.Key.Key_O:
+            if self.walk_manager.is_orbiting:
+                self.walk_manager.stop_orbit()
+                self.state_manager.transition_to(State.WALK_IDLE)
+            elif self.state_manager.current_state in AllowedWalkStates:
+                self.walk_manager.start_orbit()
+                target_state = State.RUN
+                if (target_state, self.walk_manager.get_direction()) not in ResourceRegistry.animations:
+                    target_state = State.WALK
+                self.walk_manager.is_running = (target_state == State.RUN)
+                self.state_manager.transition_to(target_state, self.walk_manager.get_direction())
+            return
+            
+        if event.key() == Qt.Key.Key_R:
+            if self.walk_manager.is_stealing_mouse:
+                self.walk_manager.stop_stealing_mouse()
+                self.state_manager.transition_to(State.WALK_IDLE)
+            elif self.state_manager.current_state in AllowedWalkStates:
+                self.walk_manager.start_stealing_mouse()
+                target_state = State.RUN
+                if (target_state, self.walk_manager.get_direction()) not in ResourceRegistry.animations:
+                    target_state = State.WALK
+                self.walk_manager.is_running = (target_state == State.RUN)
+                self.state_manager.transition_to(target_state, self.walk_manager.get_direction())
+                self.timer_manager.reset_emote_dur_timer(5000) # steal mouse for 5 seconds max
+            return
+
         # check for manual emote trigger
         if (
             self.emote_key is not None

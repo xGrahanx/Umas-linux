@@ -1,13 +1,4 @@
-Creador y dueño del proyecto https://github.com/Kritzkingvoid/Desktop_Gremlin/releases
 
-Esta version solo tiene algunas mejoras y adaptaciones
-
-### 🐧 Compatibilidad en Linux
-Esta versión es **altamente compatible** con casi cualquier distribución moderna de Linux (Ubuntu, Fedora, Debian, Arch, Mint, etc.) gracias a que está programada en Python y PySide6 (Qt). El único requisito importante depende de tu **Entorno de Escritorio** o **Gestor de Ventanas**:
-
-- **GNOME, KDE Plasma, XFCE, Cinnamon:** Funciona perfectamente "Out of the box". En GNOME Wayland usa XWayland automáticamente de fondo para leer las coordenadas del ratón.
-- **Window Managers en X11 (i3wm, bspwm, awesome):** Funciona perfectamente, pero debes asegurarte de tener un compositor como `picom` ejecutándose para que el fondo de la UMA sea transparente.
-- **Window Managers en Wayland (Hyprland, Niri):** Funciona a través de XWayland, pero deberás añadir unas reglas en la configuración de tu entorno (ej. `hyprland.conf`) para indicar que la ventana no tenga bordes ni sombras. (Revisa las guías de instalación abajo).
 # Linux Desktop Gremlins!
 
 Basically [KurtVelasco's Desktop Gremlin](https://github.com/KurtVelasco/Desktop_Gremlin), but re-written in PySide + Qt6.
@@ -33,7 +24,7 @@ https://github.com/user-attachments/assets/eeb75510-9725-4f3a-a259-0959ddc22603
 1. Run install script:
 
 ```sh
-curl -s https://raw.githubusercontent.com/xGrahanx/Umas-linux/refs/heads/main/install.sh | bash
+curl -s https://raw.githubusercontent.com/iluvgirlswithglasses/linux-desktop-gremlin/refs/heads/main/install.sh | bash
 ```
 
 2. Call the gremlins from your app launcher!
