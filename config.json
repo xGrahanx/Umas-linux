@@ -1,0 +1,13 @@
+{
+    "StartingChar": "agnes-tachyon",
+    "Systray": false,
+    "MoveSpeed": 5,
+    "Volume": 0.8,
+    "AudioDevice": "USB PnP Audio Device Est\u00e9reo anal\u00f3gico",
+    "EmoteKeyEnabled": true,
+    "EmoteKey": "P",
+    "IdleMinutes": 5,
+    "SleepMinutes": 2,
+    "Scale": 0.5,
+    "AnimationSpeed": 0.5
+}

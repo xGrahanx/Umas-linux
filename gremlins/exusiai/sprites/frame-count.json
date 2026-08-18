@@ -1,0 +1,23 @@
+{
+    "Idle": 150,
+    "Hover": 150,
+    "Sleep": 90,
+    "Intro": 60,
+    "Outro": 60,
+    "Grab": 60,
+    "Up": 39,
+    "Down": 39,
+    "Left": 39,
+    "Right": 39,
+    "UpLeft": 39,
+    "UpRight": 39,
+    "DownLeft": 39,
+    "DownRight": 39,
+    "WalkIdle": 60,
+    "Poke": 60,
+    "Pat": 150,
+    "LeftAction": 0,
+    "RightAction": 0,
+    "Reload": 0,
+    "Emote": 85
+}
