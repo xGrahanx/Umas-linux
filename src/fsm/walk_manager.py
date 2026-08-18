@@ -154,19 +154,22 @@ class WalkManager:
                 self.tracking_hor = 0
                 return 0, 0
                 
-            # Determine direction mapping (-1, 0, 1)
-            self.tracking_ver = -1 if dy < -dist/2.5 else (1 if dy > dist/2.5 else 0)
-            self.tracking_hor = -1 if dx < -dist/2.5 else (1 if dx > dist/2.5 else 0)
-            if self.tracking_ver == 0 and self.tracking_hor == 0:
-                if abs(dx) > abs(dy):
-                    self.tracking_hor = -1 if dx < 0 else 1
-                else:
-                    self.tracking_ver = -1 if dy < 0 else 1
-                
             # Boost speed significantly when chasing the mouse so it feels more like a sprint
             chase_speed = int(self.v * 1.8)
             vx = int((dx / dist) * chase_speed)
             vy = int((dy / dist) * chase_speed)
+            
+            # Update animation direction to face the velocity vector
+            dist_v = math.hypot(vx, vy)
+            if dist_v > 0:
+                self.tracking_ver = -1 if vy < -dist_v/2.5 else (1 if vy > dist_v/2.5 else 0)
+                self.tracking_hor = -1 if vx < -dist_v/2.5 else (1 if vx > dist_v/2.5 else 0)
+                if self.tracking_ver == 0 and self.tracking_hor == 0:
+                    if abs(vx) > abs(vy):
+                        self.tracking_hor = -1 if vx < 0 else 1
+                    else:
+                        self.tracking_ver = -1 if vy < 0 else 1
+                        
             return vx, vy
 
         if self.is_orbiting and current_pos is not None:
@@ -183,35 +186,33 @@ class WalkManager:
             dist = math.hypot(dx, dy)
             chase_speed = int(self.v * 1.8)
             
-            # Update animation direction to face the mouse (roughly)
-            self.tracking_ver = -1 if dy < -dist/2.5 else (1 if dy > dist/2.5 else 0)
-            self.tracking_hor = -1 if dx < -dist/2.5 else (1 if dx > dist/2.5 else 0)
-            if self.tracking_ver == 0 and self.tracking_hor == 0:
-                if abs(dx) > abs(dy):
-                    self.tracking_hor = -1 if dx < 0 else 1
-                else:
-                    self.tracking_ver = -1 if dy < 0 else 1
-                
             if dist > 200:
                 # Approach mouse
                 vx = int((dx / dist) * chase_speed)
                 vy = int((dy / dist) * chase_speed)
-                return vx, vy
             else:
                 # Orbit tangentially (perpendicular vector)
                 self.orbit_angle += 0.05
-                # Adding a slight radial component to maintain orbit distance (if dist > 150 pull in, if < 150 push out)
                 radial_pull = (dist - 150) / 50.0
                 radial_vx = (dx / dist) * chase_speed * radial_pull
                 radial_vy = (dy / dist) * chase_speed * radial_pull
-                
-                # Tangential vector (perpendicular to radial)
                 tan_vx = -(dy / dist) * chase_speed
                 tan_vy = (dx / dist) * chase_speed
-                
                 vx = int(tan_vx + radial_vx)
                 vy = int(tan_vy + radial_vy)
-                return vx, vy
+                
+            # Update animation direction to face the velocity vector
+            dist_v = math.hypot(vx, vy)
+            if dist_v > 0:
+                self.tracking_ver = -1 if vy < -dist_v/2.5 else (1 if vy > dist_v/2.5 else 0)
+                self.tracking_hor = -1 if vx < -dist_v/2.5 else (1 if vx > dist_v/2.5 else 0)
+                if self.tracking_ver == 0 and self.tracking_hor == 0:
+                    if abs(vx) > abs(vy):
+                        self.tracking_hor = -1 if vx < 0 else 1
+                    else:
+                        self.tracking_ver = -1 if vy < 0 else 1
+                        
+            return vx, vy
 
         if self.is_fleeing and current_pos is not None:
             import math
@@ -227,22 +228,25 @@ class WalkManager:
             dist = math.hypot(dx, dy)
             flee_speed = int(self.v * 1.8)
             
-            # Update animation direction to face AWAY from the mouse
-            self.tracking_ver = 1 if dy < -dist/2.5 else (-1 if dy > dist/2.5 else 0)
-            self.tracking_hor = 1 if dx < -dist/2.5 else (-1 if dx > dist/2.5 else 0)
-            if self.tracking_ver == 0 and self.tracking_hor == 0:
-                if abs(dx) > abs(dy):
-                    self.tracking_hor = 1 if dx < 0 else -1
-                else:
-                    self.tracking_ver = 1 if dy < 0 else -1
-                    
             if dist < 10:
                 # if too close, just pick a random diagonal to escape
-                return flee_speed, flee_speed
+                vx, vy = flee_speed, flee_speed
+            else:
+                # Run away from mouse
+                vx = int(-(dx / dist) * flee_speed)
+                vy = int(-(dy / dist) * flee_speed)
                 
-            # Run away from mouse
-            vx = int(-(dx / dist) * flee_speed)
-            vy = int(-(dy / dist) * flee_speed)
+            # Update animation direction to face the velocity vector
+            dist_v = math.hypot(vx, vy)
+            if dist_v > 0:
+                self.tracking_ver = -1 if vy < -dist_v/2.5 else (1 if vy > dist_v/2.5 else 0)
+                self.tracking_hor = -1 if vx < -dist_v/2.5 else (1 if vx > dist_v/2.5 else 0)
+                if self.tracking_ver == 0 and self.tracking_hor == 0:
+                    if abs(vx) > abs(vy):
+                        self.tracking_hor = -1 if vx < 0 else 1
+                    else:
+                        self.tracking_ver = -1 if vy < 0 else 1
+                        
             return vx, vy
 
         if self.is_random_walking:
