@@ -13,7 +13,7 @@ from ..fsm.state_manager import StateManager
 from ..fsm.timer_manager import TimerManager
 from ..fsm.walk_manager import WalkManager
 from ..settings import Preferences
-from ..states import State, AllowedClickStates
+from ..states import State, AllowedClickStates, Direction
 from .hotspot_manager import HotspotManager
 from .hover_manager import HoverManager
 from .input_filter import WindowInputFilter
@@ -64,7 +64,9 @@ class GremlinWindow(QWidget):
         )
 
         # --- Input managers (no event-slot assignment) ----------------------------------
-        self.mouse_manager = MouseManager(self.state_manager, self.timer_manager, self)
+        self.mouse_manager = MouseManager(
+            self.state_manager, self.timer_manager, self.walk_manager, self
+        )
         self.keyboard_manager = KeyboardManager(
             self.state_manager, self.walk_manager, self.timer_manager
         )
@@ -98,8 +100,18 @@ class GremlinWindow(QWidget):
         screen = QApplication.primaryScreen().availableGeometry()
 
         # 1. Walk velocity
-        if cur_state in (State.WALK, State.RUN):
-            dx, dy = self.walk_manager.get_velocity()
+        if cur_state in (State.WALK, State.RUN) or self.walk_manager.is_thrown:
+            dx, dy = self.walk_manager.get_velocity(self.pos(), self.width(), self.height())
+            
+            if self.walk_manager.is_tracking_mouse:
+                if dx == 0 and dy == 0:
+                    self.walk_manager.stop_mouse_tracking()
+                    self.state_manager.transition_to(State.WALK_IDLE)
+                else:
+                    new_dir = self.walk_manager.get_direction()
+                    if new_dir != self.state_manager.current_direction and new_dir != Direction.NONE:
+                        self.state_manager.transition_to(cur_state, new_dir)
+                    
             if self.walk_manager.is_random_walking:
                 new_x = self.pos().x() + dx
                 new_y = self.pos().y() + dy
@@ -113,6 +125,18 @@ class GremlinWindow(QWidget):
                     self.walk_manager.rand_ver *= -1
                     dy = self.walk_manager.rand_ver * self.walk_manager.v
                     self.state_manager.transition_to(cur_state, self.walk_manager.get_direction())
+
+            if self.walk_manager.is_thrown:
+                new_x = self.pos().x() + dx
+                new_y = self.pos().y() + dy
+                # bounce horizontally
+                if new_x < screen.left() or new_x + self.width() > screen.right():
+                    self.walk_manager.throw_vx *= -0.8
+                    dx = int(self.walk_manager.throw_vx)
+                # bounce vertically
+                if new_y < screen.top() or new_y + self.height() > screen.bottom():
+                    self.walk_manager.throw_vy *= -0.8
+                    dy = int(self.walk_manager.throw_vy)
 
         # 2. Apply movement
         if dx != 0 or dy != 0:

@@ -28,5 +28,13 @@
     "LeftAction": "fireL.png",
     "RightAction": "fireR.png",
     "Reload": "reload.png",
-    "Emote": "poke.png"
+    "Emote": "poke.png",
+    "RunUp": "backward.png",
+    "RunDown": "forward.png",
+    "RunLeft": "left.png",
+    "RunRight": "right.png",
+    "RunUpLeft": "backward.png",
+    "RunUpRight": "backward.png",
+    "RunDownLeft": "forward.png",
+    "RunDownRight": "forward.png"
 }

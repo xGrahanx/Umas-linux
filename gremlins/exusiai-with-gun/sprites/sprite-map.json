@@ -28,5 +28,13 @@
     "LeftAction": "",
     "RightAction": "",
     "Reload": "",
-    "Emote": "emote.png"
+    "Emote": "emote.png",
+    "RunUp": "idle.png",
+    "RunDown": "idle.png",
+    "RunLeft": "idle.png",
+    "RunRight": "idle.png",
+    "RunUpLeft": "idle.png",
+    "RunUpRight": "idle.png",
+    "RunDownLeft": "idle.png",
+    "RunDownRight": "idle.png"
 }

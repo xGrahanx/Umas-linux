@@ -28,5 +28,13 @@
     "WalkIdle": "wIdle.png",
     "Pat": "pat.png",
     "Emote": "emote4.png",
-    "Reload": "emote4.png"
+    "Reload": "emote4.png",
+    "RunUp": "backward.png",
+    "RunDown": "forward.png",
+    "RunLeft": "left.png",
+    "RunRight": "right.png",
+    "RunUpLeft": "upLeft.png",
+    "RunUpRight": "upRight.png",
+    "RunDownLeft": "downLeft.png",
+    "RunDownRight": "downRight.png"
 }

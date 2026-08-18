@@ -19,5 +19,13 @@
     "LeftAction": 0,
     "RightAction": 0,
     "Reload": 0,
-    "Emote": 25
+    "Emote": 25,
+    "RunUp": 18,
+    "RunDown": 18,
+    "RunLeft": 18,
+    "RunRight": 18,
+    "RunUpLeft": 18,
+    "RunUpRight": 18,
+    "RunDownLeft": 18,
+    "RunDownRight": 18
 }

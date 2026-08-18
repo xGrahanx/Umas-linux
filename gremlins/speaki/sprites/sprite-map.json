@@ -28,5 +28,13 @@
     "LeftAction": "left-action.png",
     "RightAction": "right-action.png",
     "Reload": "",
-    "Emote": "outro.png"
+    "Emote": "outro.png",
+    "RunUp": "run-up.png",
+    "RunDown": "run-down.png",
+    "RunLeft": "run-left.png",
+    "RunRight": "run-right.png",
+    "RunUpLeft": "run-left.png",
+    "RunUpRight": "run-right.png",
+    "RunDownLeft": "run-left.png",
+    "RunDownRight": "run-right.png"
 }

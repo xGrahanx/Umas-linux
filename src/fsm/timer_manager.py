@@ -106,8 +106,8 @@ class TimerManager:
         timeout = random.randint(min_ms, max_ms)
         self.emote_timer.start(timeout)
 
-    def reset_emote_dur_timer(self) -> None:
-        timeout = EmotePreferences.EmoteDuration
+    def reset_emote_dur_timer(self, custom_timeout: int = None) -> None:
+        timeout = custom_timeout if custom_timeout else EmotePreferences.EmoteDuration
         self.emote_dur_timer.start(timeout)
 
     """
@@ -145,6 +145,7 @@ class TimerManager:
             # Check if walk or run animations exist
             if (State.WALK, Direction.LEFT) in ResourceRegistry.animations or (State.RUN, Direction.LEFT) in ResourceRegistry.animations:
                 available_actions.extend(["RANDOM_WALK"] * max(1, len(available_actions)))
+                available_actions.extend(["TRACK_MOUSE"] * max(1, len(available_actions) // 2))
 
             if not available_actions:
                 self.reset_emote_timer()
@@ -159,6 +160,14 @@ class TimerManager:
                     target_state = State.WALK if target_state == State.RUN else State.RUN
                 self.state_manager.transition_to(target_state, self.walk_manager.get_direction())
                 self.reset_emote_dur_timer()
+            elif action == "TRACK_MOUSE":
+                self.walk_manager.start_mouse_tracking()
+                target_state = State.RUN
+                if (target_state, self.walk_manager.get_direction()) not in ResourceRegistry.animations:
+                    target_state = State.WALK
+                self.walk_manager.is_running = (target_state == State.RUN)
+                self.state_manager.transition_to(target_state, self.walk_manager.get_direction())
+                self.reset_emote_dur_timer(15000) # Give it 15 seconds to chase mouse autonomously
             else:
                 self.state_manager.transition_to(action)
                 if action in EndByTimeoutAnimations:
@@ -173,8 +182,14 @@ class TimerManager:
         if self.state_manager.current_state == State.EMOTE:
             self.state_manager.to_idle_or_hover()
             self.reset_passive_timer()
-        elif self.state_manager.current_state == State.WALK and self.walk_manager.is_random_walking:
+        elif self.state_manager.current_state in (State.WALK, State.RUN) and self.walk_manager.is_random_walking:
             self.walk_manager.stop_random_walk()
             self.state_manager.transition_to(State.WALK_IDLE)
             self.reset_walk_idle_timer()
             self.reset_passive_timer()
+        elif self.state_manager.current_state in (State.WALK, State.RUN) and self.walk_manager.is_tracking_mouse:
+            if not self.walk_manager.is_tracking_manually:
+                self.walk_manager.stop_mouse_tracking()
+                self.state_manager.transition_to(State.WALK_IDLE)
+                self.reset_walk_idle_timer()
+                self.reset_passive_timer()

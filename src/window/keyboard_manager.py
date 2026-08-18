@@ -1,6 +1,7 @@
 import string
 
 from PySide6.QtGui import QKeyEvent
+from PySide6.QtCore import Qt
 
 from ..fsm.state_manager import StateManager
 from ..fsm.timer_manager import TimerManager
@@ -63,6 +64,21 @@ class KeyboardManager:
                 target_state, self.walk_manager.get_direction()
             )
             self.timer_manager.reset_passive_timer()
+
+        if event.key() == Qt.Key.Key_M:
+            if self.walk_manager.is_tracking_mouse:
+                self.walk_manager.stop_mouse_tracking()
+                self.state_manager.transition_to(State.WALK_IDLE)
+            elif self.state_manager.current_state in AllowedWalkStates:
+                self.walk_manager.stop_random_walk()
+                self.walk_manager.start_mouse_tracking(True)
+                target_state = State.RUN
+                if (target_state, self.walk_manager.get_direction()) not in ResourceRegistry.animations:
+                    target_state = State.WALK
+                self.walk_manager.is_running = (target_state == State.RUN)
+                self.state_manager.transition_to(target_state, self.walk_manager.get_direction())
+                self.timer_manager.reset_emote_dur_timer()
+            return
 
         # check for manual emote trigger
         if (

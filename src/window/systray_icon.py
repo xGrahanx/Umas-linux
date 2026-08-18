@@ -14,14 +14,13 @@ class SystrayIcon:
         if not Preferences.Systray:
             return
 
-        # create system tray icon
+
         self.tray_icon = QSystemTrayIcon(parent)
         self.tray_icon.setToolTip("Gremlin")
         self.set_icon()
 
         # create menu
         menu = QMenu()
-        menu.addSeparator()
 
         # create close action
         close_action = QAction("Close", parent)

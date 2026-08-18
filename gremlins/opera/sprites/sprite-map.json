@@ -14,7 +14,6 @@
     "Intro": "intro.png",
     "Outro": "outro.png",
     "Grab": "grab.png",
-
     "Up": "run-up.png",
     "Down": "run-down.png",
     "Left": "run-left.png",
@@ -23,12 +22,19 @@
     "UpRight": "run-upright.png",
     "DownLeft": "run-downleft.png",
     "DownRight": "run-downright.png",
-
     "WalkIdle": "idle.png",
     "Poke": "intro.png",
     "Pat": "grab.png",
     "LeftAction": "",
     "RightAction": "",
     "Reload": "",
-    "Emote": ""
+    "Emote": "",
+    "RunUp": "run-up.png",
+    "RunDown": "run-down.png",
+    "RunLeft": "run-left.png",
+    "RunRight": "run-right.png",
+    "RunUpLeft": "run-upleft.png",
+    "RunUpRight": "run-upright.png",
+    "RunDownLeft": "run-downleft.png",
+    "RunDownRight": "run-downright.png"
 }
