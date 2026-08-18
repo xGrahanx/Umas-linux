@@ -1,3 +1,6 @@
+Creador y dueño del proyecto https://github.com/Kritzkingvoid/Desktop_Gremlin/releases
+
+Esta version solo tiene algunas mejoras y adaptaciones
 
 # Linux Desktop Gremlins!
 
