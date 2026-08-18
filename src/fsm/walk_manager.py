@@ -47,7 +47,7 @@ class WalkManager:
 
         # crazy mechanics
         self.is_orbiting = False
-        self.is_stealing_mouse = False
+        self.is_fleeing = False
         self.orbit_angle = 0.0
 
     """
@@ -75,7 +75,7 @@ class WalkManager:
         self.is_running = True # Run when chasing mouse
         self.is_thrown = False
         self.is_orbiting = False
-        self.is_stealing_mouse = False
+        self.is_fleeing = False
 
     def stop_mouse_tracking(self) -> None:
         self.is_tracking_mouse = False
@@ -88,7 +88,7 @@ class WalkManager:
         self.is_random_walking = False
         self.is_tracking_mouse = False
         self.is_orbiting = False
-        self.is_stealing_mouse = False
+        self.is_fleeing = False
 
     def stop_throw(self) -> None:
         self.is_thrown = False
@@ -101,27 +101,21 @@ class WalkManager:
         self.is_tracking_mouse = False
         self.is_random_walking = False
         self.is_thrown = False
-        self.is_stealing_mouse = False
+        self.is_fleeing = False
 
     def stop_orbit(self) -> None:
         self.is_orbiting = False
 
-    def start_stealing_mouse(self) -> None:
-        import random
-        self.is_stealing_mouse = True
-        self.is_random_walking = True
-        self.rand_ver = random.choice([-1, 0, 1])
-        self.rand_hor = random.choice([-1, 0, 1])
-        if self.rand_ver == 0 and self.rand_hor == 0:
-            self.rand_hor = random.choice([-1, 1])
+    def start_fleeing(self) -> None:
+        self.is_fleeing = True
         self.is_running = True
         self.is_tracking_mouse = False
         self.is_orbiting = False
+        self.is_random_walking = False
         self.is_thrown = False
 
-    def stop_stealing_mouse(self) -> None:
-        self.is_stealing_mouse = False
-        self.stop_random_walk()
+    def stop_fleeing(self) -> None:
+        self.is_fleeing = False
 
     @property
     def v(self) -> int:
@@ -219,6 +213,38 @@ class WalkManager:
                 vy = int(tan_vy + radial_vy)
                 return vx, vy
 
+        if self.is_fleeing and current_pos is not None:
+            import math
+            from PySide6.QtGui import QCursor
+            cursor_pos = QCursor.pos()
+            
+            cx = current_pos.x() + width / 2
+            cy = current_pos.y() + height / 2
+            
+            dx = cursor_pos.x() - cx
+            dy = cursor_pos.y() - cy
+            
+            dist = math.hypot(dx, dy)
+            flee_speed = int(self.v * 1.8)
+            
+            # Update animation direction to face AWAY from the mouse
+            self.tracking_ver = 1 if dy < -dist/2.5 else (-1 if dy > dist/2.5 else 0)
+            self.tracking_hor = 1 if dx < -dist/2.5 else (-1 if dx > dist/2.5 else 0)
+            if self.tracking_ver == 0 and self.tracking_hor == 0:
+                if abs(dx) > abs(dy):
+                    self.tracking_hor = 1 if dx < 0 else -1
+                else:
+                    self.tracking_ver = 1 if dy < 0 else -1
+                    
+            if dist < 10:
+                # if too close, just pick a random diagonal to escape
+                return flee_speed, flee_speed
+                
+            # Run away from mouse
+            vx = int(-(dx / dist) * flee_speed)
+            vy = int(-(dy / dist) * flee_speed)
+            return vx, vy
+
         if self.is_random_walking:
             return self.rand_hor * self.v, self.rand_ver * self.v
             
@@ -234,7 +260,7 @@ class WalkManager:
         """
         Returns True if either vertical or horizontal movement is occurring.
         """
-        if self.is_orbiting:
+        if self.is_orbiting or self.is_fleeing:
             return True
         if self.is_tracking_mouse:
             return self.tracking_ver != 0 or self.tracking_hor != 0
@@ -246,7 +272,7 @@ class WalkManager:
         """
         Returns a string representing the current movement direction for animation purposes.
         """
-        if self.is_tracking_mouse or self.is_orbiting:
+        if self.is_tracking_mouse or self.is_orbiting or self.is_fleeing:
             return DirectionMap[(self.tracking_hor, self.tracking_ver)]
         if self.is_random_walking:
             return DirectionMap[(self.rand_hor, self.rand_ver)]

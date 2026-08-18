@@ -103,7 +103,7 @@ class GremlinWindow(QWidget):
         if cur_state in (State.WALK, State.RUN) or self.walk_manager.is_thrown:
             dx, dy = self.walk_manager.get_velocity(self.pos(), self.width(), self.height())
             
-            if self.walk_manager.is_tracking_mouse or self.walk_manager.is_orbiting:
+            if self.walk_manager.is_tracking_mouse or self.walk_manager.is_orbiting or self.walk_manager.is_fleeing:
                 if dx == 0 and dy == 0 and self.walk_manager.is_tracking_mouse:
                     self.walk_manager.stop_mouse_tracking()
                     self.state_manager.transition_to(State.WALK_IDLE)
@@ -137,12 +137,6 @@ class GremlinWindow(QWidget):
                 if new_y < screen.top() or new_y + self.height() > screen.bottom():
                     self.walk_manager.throw_vy *= -0.8
                     dy = int(self.walk_manager.throw_vy)
-
-            if self.walk_manager.is_stealing_mouse:
-                from PySide6.QtGui import QCursor
-                cx = self.pos().x() + dx + self.width() / 2
-                cy = self.pos().y() + dy + self.height() / 2
-                QCursor.setPos(int(cx), int(cy))
 
         # 2. Apply movement
         if dx != 0 or dy != 0:

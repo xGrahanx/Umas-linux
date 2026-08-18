@@ -193,8 +193,8 @@ class TimerManager:
                 self.state_manager.transition_to(State.WALK_IDLE)
                 self.reset_walk_idle_timer()
                 self.reset_passive_timer()
-        elif self.state_manager.current_state in (State.WALK, State.RUN) and self.walk_manager.is_stealing_mouse:
-            self.walk_manager.stop_stealing_mouse()
+        elif self.state_manager.current_state in (State.WALK, State.RUN) and self.walk_manager.is_fleeing:
+            self.walk_manager.stop_fleeing()
             self.state_manager.transition_to(State.WALK_IDLE)
             self.reset_walk_idle_timer()
             self.reset_passive_timer()

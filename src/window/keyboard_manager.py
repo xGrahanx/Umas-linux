@@ -98,11 +98,11 @@ class KeyboardManager:
             return
             
         if event.key() == Qt.Key.Key_R:
-            if self.walk_manager.is_stealing_mouse:
-                self.walk_manager.stop_stealing_mouse()
+            if self.walk_manager.is_fleeing:
+                self.walk_manager.stop_fleeing()
                 self.state_manager.transition_to(State.WALK_IDLE)
             elif self.state_manager.current_state in AllowedWalkStates:
-                self.walk_manager.start_stealing_mouse()
+                self.walk_manager.start_fleeing()
                 initial_dir = self.walk_manager.get_direction()
                 if initial_dir == Direction.NONE:
                     initial_dir = Direction.DOWN
